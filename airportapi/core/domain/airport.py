@@ -1,6 +1,5 @@
 """Module containing airport-related domain models"""
 
-
 from typing import Optional
 
 from pydantic import BaseModel, ConfigDict
@@ -8,6 +7,7 @@ from pydantic import BaseModel, ConfigDict
 
 class AirportIn(BaseModel):
     """Model representing airport's DTO attributes."""
+    name: str
     icao_code: str
     iata_code: str
     country_id: int

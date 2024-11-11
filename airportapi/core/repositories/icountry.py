@@ -1,38 +1,38 @@
 """Module containing country repository abstractions."""
 
 from abc import ABC, abstractmethod
-from typing import Iterable
+from typing import Any, Iterable
 
-from airportapi.core.domain.location import Country, CountryIn
+from airportapi.core.domain.location import CountryIn
 
 
 class ICountryRepository(ABC):
     """An abstract class representing protocol of country repository."""
 
     @abstractmethod
-    async def get_country_by_id(self, country_id: int) -> Country | None:
+    async def get_country_by_id(self, country_id: int) -> Any | None:
         """The abstract getting a country from the data storage.
 
         Args:
             country_id (int): The id of the country.
 
         Returns:
-            Country | None: The country data if exists.
+            Any | None: The country data if exists.
         """
 
     @abstractmethod
-    async def get_all_countries(self) -> Iterable[Country]:
+    async def get_all_countries(self) -> Iterable[Any]:
         """The abstract getting all countries from the data storage.
 
         Returns:
-            Iterable[Country]: The collection of the all countries.
+            Iterable[Any]: The collection of the all countries.
         """
 
     @abstractmethod
     async def get_countries_by_continent(
         self,
         continent_id: int,
-    ) -> Iterable[Country]:
+    ) -> Iterable[Any]:
         """The abstract getting all provided continent's countries
             from the data storage.
 
@@ -40,15 +40,18 @@ class ICountryRepository(ABC):
             continent_id (int): The id of the continent.
 
         Returns:
-            Iterable[Country]: The collection of the countries.
+            Iterable[Any]: The collection of the countries.
         """
 
     @abstractmethod
-    async def add_country(self, data: CountryIn) -> None:
+    async def add_country(self, data: CountryIn) -> Any | None:
         """The abstract adding new country to the data storage.
 
         Args:
             data (CountryIn): The attributes of the country.
+
+        Returns:
+            Any | None: The newly created country.
         """
 
     @abstractmethod
@@ -56,7 +59,7 @@ class ICountryRepository(ABC):
         self,
         country_id: int,
         data: CountryIn,
-    ) -> Country | None:
+    ) -> Any | None:
         """The abstract updating country data in the data storage.
 
         Args:
@@ -64,7 +67,7 @@ class ICountryRepository(ABC):
             data (CountryIn): The attributes of the country.
 
         Returns:
-            Country | None: The updated country.
+            Any | None: The updated country.
         """
 
     @abstractmethod

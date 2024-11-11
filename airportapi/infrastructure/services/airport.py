@@ -4,6 +4,7 @@ from typing import Iterable
 
 from airportapi.core.domain.airport import Airport, AirportIn
 from airportapi.core.repositories.iairport import IAirportRepository
+from airportapi.infrastructure.dto.airportdto import AirportDTO
 from airportapi.infrastructure.services.iairport import IAirportService
 
 
@@ -21,11 +22,11 @@ class AirportService(IAirportService):
 
         self._repository = repository
 
-    async def get_all(self) -> Iterable[Airport]:
+    async def get_all(self) -> Iterable[AirportDTO]:
         """The method getting all airports from the repository.
 
         Returns:
-            Iterable[Airport]: All airports.
+            Iterable[AirportDTO]: All airports.
         """
 
         return await self._repository.get_all_airports()
@@ -54,38 +55,38 @@ class AirportService(IAirportService):
 
         return await self._repository.get_by_continent(continent_id)
 
-    async def get_by_id(self, airport_id: int) -> Airport | None:
+    async def get_by_id(self, airport_id: int) -> AirportDTO | None:
         """The method getting airport by provided id.
 
         Args:
             airport_id (int): The id of the airport.
 
         Returns:
-            Airport | None: The airport details.
+            AirportDTO | None: The airport details.
         """
 
         return await self._repository.get_by_id(airport_id)
 
-    async def get_by_icao(self, icao_code: str) -> Airport | None:
+    async def get_by_icao(self, icao_code: str) -> AirportDTO | None:
         """The method getting airport by provided ICAO code.
 
         Args:
             icao_code (str): The ICAO code of the airport.
 
         Returns:
-            Airport | None: The airport details.
+            AirportDTO | None: The airport details.
         """
 
         return await self._repository.get_by_icao(icao_code)
 
-    async def get_by_iata(self, iata_code: str) -> Airport | None:
+    async def get_by_iata(self, iata_code: str) -> AirportDTO | None:
         """The method getting airport by provided IATA code.
 
         Args:
             icao_code (str): The IATA code of the airport.
 
         Returns:
-            Airport | None: The airport details.
+            AirportDTO | None: The airport details.
         """
 
         return await self._repository.get_by_iata(iata_code)
@@ -125,17 +126,17 @@ class AirportService(IAirportService):
             radius=radius,
         )
 
-    async def add_airport(self, data: AirportIn) -> None:
+    async def add_airport(self, data: AirportIn) -> Airport | None:
         """The method adding new airport to the data storage.
 
         Args:
             data (AirportIn): The details of the new airport.
 
         Returns:
-            Airport: Full details of the newly added airport.
+            Airport | None: Full details of the newly added airport.
         """
 
-        await self._repository.add_airport(data)
+        return await self._repository.add_airport(data)
 
     async def update_airport(
         self,

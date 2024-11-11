@@ -45,11 +45,14 @@ class ICountryService(ABC):
         """
 
     @abstractmethod
-    async def add_country(self, data: CountryIn) -> None:
+    async def add_country(self, data: CountryIn) -> Country | None:
         """The abstract adding new country to the repository.
 
         Args:
             data (CountryIn): The attributes of the country.
+
+        Returns:
+            Country | None: The newly created country.
         """
 
     @abstractmethod

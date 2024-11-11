@@ -11,5 +11,5 @@ Aplikacja przeznaczona do gromadzenia obserwacji pogodowych w formacie METAR.
 
 ## Stos technologiczny
 - Python 3.12.7
-- PostgreSQL 17.0 (od następnej iteracji projektu)
-- Docker (od następnej iteracji projektu)
+- PostgreSQL 17.0
+- Docker

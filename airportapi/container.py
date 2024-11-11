@@ -3,11 +3,11 @@
 from dependency_injector.containers import DeclarativeContainer
 from dependency_injector.providers import Factory, Singleton
 
-from airportapi.infrastructure.repositories.airportmock import \
-    AirportMockRepository
-from airportapi.infrastructure.repositories.continentmock import \
+from airportapi.infrastructure.repositories.airportdb import \
+    AirportRepository
+from airportapi.infrastructure.repositories.continentdb import \
     ContinentRepository
-from airportapi.infrastructure.repositories.countrymock import \
+from airportapi.infrastructure.repositories.countrydb import \
     CountryMockRepository
 from airportapi.infrastructure.services.airport import AirportService
 from airportapi.infrastructure.services.continent import ContinentService
@@ -18,7 +18,7 @@ class Container(DeclarativeContainer):
     """Container class for dependency injecting purposes."""
     continent_repository = Singleton(ContinentRepository)
     country_repository = Singleton(CountryMockRepository)
-    airport_repository = Singleton(AirportMockRepository)
+    airport_repository = Singleton(AirportRepository)
 
     continent_service = Factory(
         ContinentService,

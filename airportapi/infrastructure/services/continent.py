@@ -43,14 +43,17 @@ class ContinentService(IContinentService):
 
         return await self._repository.get_all_continents()
 
-    async def add_continent(self, data: ContinentIn) -> None:
+    async def add_continent(self, data: ContinentIn) -> Continent | None:
         """The method adding new continent to the repository.
 
         Args:
             data (ContinentIn): The attributes of the continent.
+
+        Returns:
+            Continent | None: The newly created continent.
         """
 
-        await self._repository.add_continent(data)
+        return await self._repository.add_continent(data)
 
     async def update_continent(
         self,

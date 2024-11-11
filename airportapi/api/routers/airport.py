@@ -1,10 +1,12 @@
 """A module containing continent endpoints."""
 
+from typing import Iterable
 from dependency_injector.wiring import inject, Provide
 from fastapi import APIRouter, Depends, HTTPException
 
 from airportapi.container import Container
 from airportapi.core.domain.airport import Airport, AirportIn
+from airportapi.infrastructure.dto.airportdto import AirportDTO
 from airportapi.infrastructure.services.iairport import IAirportService
 
 router = APIRouter()
@@ -26,41 +28,40 @@ async def create_airport(
         dict: The new airport attributes.
     """
 
-    await service.add_airport(airport)
+    new_airport = await service.add_airport(airport)
 
-    return {**airport.model_dump(), "id": 0}
+    return new_airport.model_dump() if new_airport else {}
 
 
-@router.get("/all", response_model=list[Airport], status_code=200)
+@router.get("/all", response_model=Iterable[AirportDTO], status_code=200)
 @inject
 async def get_all_airports(
     service: IAirportService = Depends(Provide[Container.airport_service]),
-) -> list:
+) -> Iterable:
     """An endpoint for getting all airports.
 
     Args:
         service (IAirportService, optional): The injected service dependency.
 
     Returns:
-        list: The airport attributes collection.
+        Iterable: The airport attributes collection.
     """
 
     airports = await service.get_all()
 
-    return [{**airport.model_dump(), "id": 0}
-            for i, airport in enumerate(airports)]
+    return airports
 
 
 @router.get(
         "/country/{country_id}",
-        response_model=list[Airport],
+        response_model=Iterable[Airport],
         status_code=200,
 )
 @inject
 async def get_airports_by_country(
     country_id: int,
     service: IAirportService = Depends(Provide[Container.airport_service]),
-) -> list:
+) -> Iterable:
     """An endpoint for getting airports by country.
 
     Args:
@@ -68,25 +69,24 @@ async def get_airports_by_country(
         service (IAirportService, optional): The injected service dependency.
 
     Returns:
-        list: The airport details collection.
+        Iterable: The airport details collection.
     """
 
     airports = await service.get_by_country(country_id)
 
-    return [{**airport.model_dump(), "id": 0}
-            for i, airport in enumerate(airports)]
+    return airports
 
 
 @router.get(
         "/continent/{continent_id}",
-        response_model=list[Airport],
+        response_model=Iterable[Airport],
         status_code=200,
 )
 @inject
 async def get_airports_by_continent(
     continent_id: int,
     service: IAirportService = Depends(Provide[Container.airport_service]),
-) -> list:
+) -> Iterable:
     """An endpoint for getting airports by continent.
 
     Args:
@@ -94,18 +94,17 @@ async def get_airports_by_continent(
         service (IAirportService, optional): The injected service dependency.
 
     Returns:
-        list: The airport details collection.
+        Iterable: The airport details collection.
     """
 
     airports = await service.get_by_continent(continent_id)
 
-    return [{**airport.model_dump(), "id": 0}
-            for i, airport in enumerate(airports)]
+    return airports
 
 
 @router.get(
         "/{airport_id}",
-        response_model=Airport,
+        response_model=AirportDTO,
         status_code=200,
 )
 @inject
@@ -124,14 +123,14 @@ async def get_airport_by_id(
     """
 
     if airport := await service.get_by_id(airport_id):
-        return {**airport.model_dump(), "id": airport_id}
+        return airport.model_dump()
 
     raise HTTPException(status_code=404, detail="Airport not found")
 
 
 @router.get(
         "/icao/{icao_code}",
-        response_model=Airport,
+        response_model=AirportDTO,
         status_code=200,
 )
 @inject
@@ -150,14 +149,14 @@ async def get_airport_by_icao(
     """
 
     if airport := await service.get_by_icao(icao_code):
-        return {**airport.model_dump(), "id": 0}
+        return airport.model_dump()
 
     raise HTTPException(status_code=404, detail="Airport not found")
 
 
 @router.get(
         "/iata/{iata_code}",
-        response_model=Airport,
+        response_model=AirportDTO,
         status_code=200,
 )
 @inject
@@ -179,21 +178,21 @@ async def get_airport_by_iata(
     """
 
     if airport := await service.get_by_iata(iata_code):
-        return {**airport.model_dump(), "id": 0}
+        return airport.model_dump()
 
     raise HTTPException(status_code=404, detail="Airport not found")
 
 
 @router.get(
         "/user/{user_id}",
-        response_model=list[Airport],
+        response_model=Iterable[Airport],
         status_code=200,
 )
 @inject
 async def get_airports_by_user(
     user_id: int,
     service: IAirportService = Depends(Provide[Container.airport_service]),
-) -> list:
+) -> Iterable:
     """An endpoint for getting airports by user who added them.
 
     Args:
@@ -201,18 +200,17 @@ async def get_airports_by_user(
         service (IAirportService, optional): The injected service dependency.
 
     Returns:
-        list: The airport details collection.
+        Iterable: The airport details collection.
     """
 
     airports = await service.get_by_user(user_id)
 
-    return [{**airport.model_dump(), "id": 0}
-            for i, airport in enumerate(airports)]
+    return airports
 
 
 @router.get(
         "/location",
-        response_model=list[Airport],
+        response_model=Iterable[Airport],
         status_code=200,
 )
 @inject
@@ -221,7 +219,7 @@ async def get_airports_by_location(
     longitude: float,
     radius: float,
     service: IAirportService = Depends(Provide[Container.airport_service]),
-) -> list:
+) -> Iterable:
     """An endpoint for getting airports by location.
 
     Args:
@@ -231,7 +229,7 @@ async def get_airports_by_location(
         service (IAirportService, optional): The injected service dependency.
 
     Returns:
-        list: The airport details collection.
+        Iterable: The airport details collection.
     """
 
     airports = await service.get_by_location(
@@ -240,8 +238,7 @@ async def get_airports_by_location(
         radius=radius,
     )
 
-    return [{**airport.model_dump(), "id": 0}
-            for i, airport in enumerate(airports)]
+    return airports
 
 
 @router.put("/{airport_id}", response_model=Airport, status_code=201)

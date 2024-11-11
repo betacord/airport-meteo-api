@@ -1,0 +1,1 @@
+asyncpg-stubs==0.30.0

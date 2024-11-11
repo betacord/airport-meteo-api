@@ -1,39 +1,42 @@
 """Module containing contient repository abstractions."""
 
 from abc import ABC, abstractmethod
-from typing import Iterable
+from typing import Any, Iterable
 
-from airportapi.core.domain.location import Continent, ContinentIn
+from airportapi.core.domain.location import ContinentIn
 
 
 class IContinentRepository(ABC):
     """An abstract class representing protocol of continent repository."""
 
     @abstractmethod
-    async def get_continent_by_id(self, continent_id: int) -> Continent | None:
+    async def get_continent_by_id(self, continent_id: int) -> Any | None:
         """The abstract getting a continent from the data storage.
 
         Args:
             continent_id (int): The id of the continent.
 
         Returns:
-            continent | None: The continent data if exists.
+            Any | None: The continent data if exists.
         """
 
     @abstractmethod
-    async def get_all_continents(self) -> Iterable[Continent]:
+    async def get_all_continents(self) -> Iterable[Any]:
         """The abstract getting all continents from the data storage.
 
         Returns:
-            Iterable[Continent]: The collection of the all continents.
+            Iterable[Any]: The collection of the all continents.
         """
 
     @abstractmethod
-    async def add_continent(self, data: ContinentIn) -> None:
+    async def add_continent(self, data: ContinentIn) -> Any | None:
         """The abstract adding new continent to the data storage.
 
         Args:
             data (ContinentIn): The attributes of the continent.
+
+        Returns:
+            Any | None: The newly created continent.
         """
 
     @abstractmethod
@@ -41,7 +44,7 @@ class IContinentRepository(ABC):
         self,
         continent_id: int,
         data: ContinentIn,
-    ) -> Continent | None:
+    ) -> Any | None:
         """The abstract updating continent data in the data storage.
 
         Args:
@@ -49,7 +52,7 @@ class IContinentRepository(ABC):
             data (ContinentIn): The attributes of the continent.
 
         Returns:
-            Continent | None: The updated continent.
+            Any | None: The updated continent.
         """
 
     @abstractmethod

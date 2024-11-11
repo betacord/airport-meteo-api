@@ -1,5 +1,6 @@
 """A module containing country endpoints."""
 
+from typing import Iterable
 from dependency_injector.wiring import inject, Provide
 from fastapi import APIRouter, Depends, HTTPException
 
@@ -26,29 +27,28 @@ async def create_country(
         dict: The new country attributes.
     """
 
-    await service.add_country(country)
+    new_country = await service.add_country(country)
 
-    return {**country.model_dump(), "id": 0}
+    return new_country.model_dump() if new_country else {}
 
 
-@router.get("/all", response_model=list[Country], status_code=200)
+@router.get("/all", response_model=Iterable[Country], status_code=200)
 @inject
 async def get_all_countries(
     service: ICountryService = Depends(Provide[Container.country_service]),
-) -> list:
+) -> Iterable:
     """An endpoint for getting all countries.
 
     Args:
         service (ICountryService, optional): The injected service dependency.
 
     Returns:
-        dict: The country attributes collection.
+        Iterable: The country attributes collection.
     """
 
     countries = await service.get_all_countries()
 
-    return [{**country.model_dump(), "id": 0}
-            for i, country in enumerate(countries)]
+    return countries
 
 
 @router.get("/{country_id}", response_model=Country, status_code=200)
@@ -71,7 +71,7 @@ async def get_country_by_id(
     """
 
     if country := await service.get_country_by_id(country_id=country_id):
-        return {**country.model_dump(), "id": country_id}
+        return country.model_dump()
 
     raise HTTPException(status_code=404, detail="Country not found")
 
@@ -85,7 +85,7 @@ async def get_country_by_id(
 async def get_country_by_continent(
     continent_id: int,
     service: ICountryService = Depends(Provide[Container.country_service]),
-) -> list:
+) -> Iterable:
     """An endpoint for getting countries by continent.
 
     Args:
@@ -98,8 +98,7 @@ async def get_country_by_continent(
 
     countries = await service.get_countries_by_continent(continent_id)
 
-    return [{**country.model_dump(), "id": 0}
-            for i, country in enumerate(countries)]
+    return countries
 
 
 @router.put("/{country_id}", response_model=Country, status_code=201)
@@ -120,15 +119,15 @@ async def update_country(
         HTTPException: 404 if country does not exist.
 
     Returns:
-        dict: _description_
+        dict: The updated country data.
     """
 
     if await service.get_country_by_id(country_id=country_id):
-        await service.update_country(
+        new_updated_country = await service.update_country(
             country_id=country_id,
             data=updated_country,
         )
-        return {**updated_country.model_dump(), "id": country_id}
+        return new_updated_country.model_dump() if new_updated_country else {}
 
     raise HTTPException(status_code=404, detail="Country not found")
 

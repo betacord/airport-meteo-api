@@ -58,14 +58,17 @@ class CountryService(ICountryService):
 
         return await self._repository.get_countries_by_continent(continent_id)
 
-    async def add_country(self, data: CountryIn) -> None:
+    async def add_country(self, data: CountryIn) -> Country | None:
         """The abstract adding new country to the repository.
 
         Args:
             data (CountryIn): The attributes of the country.
+
+        Returns:
+            Country | None: The newly created country.
         """
 
-        await self._repository.add_country(data)
+        return await self._repository.add_country(data)
 
     async def update_country(
         self,

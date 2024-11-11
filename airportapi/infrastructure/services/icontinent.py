@@ -29,11 +29,14 @@ class IContinentService(ABC):
         """
 
     @abstractmethod
-    async def add_continent(self, data: ContinentIn) -> None:
+    async def add_continent(self, data: ContinentIn) -> Continent | None:
         """The abstract adding new continent to the repository.
 
         Args:
             data (ContinentIn): The attributes of the continent.
+
+        Returns:
+            Continent | None: The newly created continent.
         """
 
     @abstractmethod
