@@ -1,8 +1,0 @@
-databases[asyncpg]==0.9.0
-dependency-injector==4.42.0
-fastapi==0.115.4
-metar==1.11.0
-pydantic==2.9.2
-pydantic-settings==2.6.1
-SQLAlchemy==2.0.36
-uvicorn==0.32.0

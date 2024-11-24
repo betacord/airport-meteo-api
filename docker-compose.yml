@@ -1,12 +1,12 @@
 services:
   app:
     build:
-      context: .
+      context: airportapi/
     ports:
       - "8000:8000"
     volumes:
-      - ./airportapi:/airportapi
-    command: ["uvicorn", "airportapi.main:app", "--host", "0.0.0.0", "--port", "8000"]
+      - ./airportapi/src:/src
+    command: ["uvicorn", "src.main:app", "--host", "0.0.0.0", "--port", "8000"]
     environment:
       - DB_HOST=db
       - DB_NAME=app
@@ -17,6 +17,19 @@ services:
     networks:
       - backend
     container_name: app
+
+  scanner:
+    build:
+      context: metarscanner/
+    restart: always
+    environment:
+      - API_HOST=app
+      - API_PORT=8000
+    depends_on:
+      - app
+    networks:
+      - backend
+    container_name: scanner
 
   db:
     image: postgres:17.0-alpine3.20

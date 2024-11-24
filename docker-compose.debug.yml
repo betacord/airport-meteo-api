@@ -1,16 +1,16 @@
 services:
   app:
     build:
-      context: .
+      context: airportapi/
     volumes:
-      - ./airportapi:/airportapi
+      - ./airportapi/src:/src
     command:
       - "sh"
       - "-c"
       - |
         pip install debugpy -t /tmp \
         && python /tmp/debugpy --wait-for-client --listen 0.0.0.0:5678 \
-        -m uvicorn airportapi.main:app --host 0.0.0.0 --port 8000        
+        -m uvicorn src.main:app --host 0.0.0.0 --port 8000
     ports:
       - 8000:8000
       - 5678:5678
@@ -24,6 +24,18 @@ services:
     networks:
       - backend
     container_name: app
+
+  scanner:
+    build:
+      context: metarscanner/
+    environment:
+      - API_HOST=app
+      - API_PORT=8000
+    depends_on:
+      - app
+    networks:
+      - backend
+    container_name: scanner
 
   db:
     image: postgres:17.0-alpine3.20
